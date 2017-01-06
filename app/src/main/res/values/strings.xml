@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Top Free Apps</string>
+    <string name="servicio_url">https://itunes.apple.com/us/rss/topfreeapplications/limit=20/json</string>
+
+    <string name="filtro">Filtrar por categorías</string>
+    <string name="lbl_name">Nombre App:</string>
+    <string name="lbl_realese_date">Fecha de publicación:</string>
+    <string name="lbl_price">Precio en la tienda:</string>
+    <string name="lbl_summary">Resumen</string>
+    <string name="lbl_make_by">Hecho por:</string>
+    <string name="lbl_category">Categoría:</string>
+
+
+</resources>
