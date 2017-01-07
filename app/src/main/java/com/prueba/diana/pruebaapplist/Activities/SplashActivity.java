@@ -2,12 +2,15 @@ package com.prueba.diana.pruebaapplist.Activities;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.prueba.diana.pruebaapplist.Activities.CatalogoActivity;
 import com.prueba.diana.pruebaapplist.R;
@@ -46,9 +49,19 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        dbHelper = new SqlitedbHelper(getApplicationContext());
+        if (isNetworkAvailable()){
+            new LoadInfo().execute();
+        } else {
+            Toast.makeText(this, getString(R.string.msg_no_internet), Toast.LENGTH_LONG);
+        }
 
-        new LoadInfo().execute();
+        dbHelper = new SqlitedbHelper(getApplicationContext());
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     class LoadInfo extends AsyncTask {

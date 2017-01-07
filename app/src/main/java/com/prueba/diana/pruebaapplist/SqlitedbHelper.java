@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 
@@ -151,8 +152,6 @@ public class SqlitedbHelper extends SQLiteOpenHelper {
      **/
     public boolean insertData (JsonArray app) {
 
-        Log.e("ESTO ES LO Q HAY", app.toString());
-
         for (int i= 0; i < app.size(); i++) {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues contentValues = new ContentValues();
@@ -246,7 +245,7 @@ public class SqlitedbHelper extends SQLiteOpenHelper {
                         }
                     });
         } else {
-           Log.e("No hay", "conexion a internet!");
+            Log.e("No hay", "conexion a internet!");
         }
     }
 

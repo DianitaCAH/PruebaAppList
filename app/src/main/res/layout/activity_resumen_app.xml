@@ -57,7 +57,7 @@
 
                     <RelativeLayout
                         android:layout_height="wrap_content"
-                        android:layout_width="210dp"
+                        android:layout_width="wrap_content"
                         android:padding="5dp">
 
                         <TextView
@@ -99,8 +99,8 @@
                             android:id="@+id/TxtMakeBy"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:paddingBottom="2dp"
+                            android:layout_gravity="left"
+                            android:padding="2dp"
                             android:textColor="@color/dark_gray"
                             android:textSize="12sp"
                             android:text="asdadaad2"

@@ -1,5 +1,6 @@
 package com.prueba.diana.pruebaapplist.Activities;
 
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,7 +8,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +28,22 @@ import java.util.ArrayList;
 public class ResumenAppActivity extends AppCompatActivity {
 
     public Applications app;
+    public boolean isLargeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resumen_app);
+
+        //Setting screen orientation
+        isLargeLayout = getResources().getBoolean(R.bool.portrait_only);
+        if(isLargeLayout) { //landscape for tablets
+            // Tablet Mode
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else { //portrair for phones and small devices
+            // Handset Mode
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
         Bundle data = getIntent().getExtras();
         app = data.getParcelable("app");
@@ -39,11 +53,12 @@ public class ResumenAppActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //Loading info
         setAppInfo();
     }
 
     /**
-     * Method tp set info of the app selected
+     * Method to set info of the app selected
      * */
     public void setAppInfo() {
 
@@ -72,7 +87,7 @@ public class ResumenAppActivity extends AppCompatActivity {
     }
 
     /**
-     * Class to load the coupon image in background
+     * Class to load the app image in background
      * */
     private class DownloadImage extends AsyncTask<String, Integer, Bitmap> {
 

@@ -1,13 +1,21 @@
 package com.prueba.diana.pruebaapplist.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -23,18 +31,35 @@ public class CatalogoActivity extends AppCompatActivity {
 
     public SqlitedbHelper dbHelper;
     public ListView listvApps;
+    public GridView gridvApps;
     public ArrayList<Applications> appsArrayList;
     public ApplicationsAdapter adapter;
+    public  boolean isLargeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalogo);
 
+        //Setting screen orientation
+        isLargeLayout = getResources().getBoolean(R.bool.portrait_only);
+        if (isLargeLayout) { //landscape for tablets
+            // Tablet Mode
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            gridvApps = (GridView) findViewById(R.id.list_apps);
+        } else { //portrair for phones and small devices
+            // Handset Mode
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            listvApps = (ListView) findViewById(R.id.list_apps);
+        }
+        //Checking internet conection
+        if (!isNetworkAvailable()){
+           dialog();
+        }
         dbHelper = new SqlitedbHelper(getApplicationContext());
-        listvApps = (ListView) findViewById(R.id.list_apps);
         appsArrayList = new ArrayList<>();
         adapter = new ApplicationsAdapter(this, appsArrayList);
+        //Loading spinner
         cargoSpinner();
     }
 
@@ -43,12 +68,47 @@ public class CatalogoActivity extends AppCompatActivity {
         super.onStart();
         //Getting all the apps
         getAppsArrayList(false, "");
-        loadApps();
-
+        if(isLargeLayout) {
+            // Tablet Mode
+            loadAppsTablets();
+        } else {
+            // Handset Mode
+            loadAppsPhones();
+        }
 
     }
 
-    private void loadApps() {
+    /**
+     * Method to check if there is internet connection
+     * */
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * Dialog to show internet message error
+     * */
+    public void dialog() {
+        // Build the dialog and set up the button click handlers
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.msg_no_internet))
+                .setNeutralButton(getResources().getString(R.string.btn_OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create();
+        builder.show();
+    }
+
+    /**
+     * Method to load listView adapter
+     * */
+    private void loadAppsPhones() {
         listvApps.setAdapter(adapter);
         listvApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -61,6 +121,25 @@ public class CatalogoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to load gridView adapter
+     * */
+    private void loadAppsTablets() {
+        gridvApps.setAdapter(adapter);
+        gridvApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Applications app = (Applications) gridvApps.getItemAtPosition(position);
+                Intent intent = new Intent(getBaseContext(), ResumenAppActivity.class);
+                intent.putExtra("app", app);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Method to load spinner
+     * */
     private void cargoSpinner() {
         final Spinner spinner = (Spinner) findViewById(R.id.spinnerCategories);
         Cursor cursor = dbHelper.getCategories();
@@ -77,8 +156,9 @@ public class CatalogoActivity extends AppCompatActivity {
                     } while (cursor.moveToNext());
                 }
             } else {
-                Toast.makeText(this, "no hay categorias q listar", Toast.LENGTH_LONG).show();
-                spinner.setVisibility(View.GONE);
+                Toast.makeText(this, getString(R.string.msg_no_categories), Toast.LENGTH_LONG).show();
+                LinearLayout filtro = (LinearLayout) findViewById(R.id.layout_filtro);
+                filtro.setVisibility(View.GONE);
             }
 
         } finally {
@@ -94,6 +174,8 @@ public class CatalogoActivity extends AppCompatActivity {
                 String category = spinner.getItemAtPosition(position).toString();
                 if (!category.equalsIgnoreCase("Categorías"))
                     getAppsArrayList(true, category);
+                else
+                    getAppsArrayList(false, "");
             }
 
             @Override
@@ -103,6 +185,9 @@ public class CatalogoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Method to get information from the DB
+     * */
     public ArrayList<Applications> getAppsArrayList(boolean filtreded, String category) {
         Cursor cursor;
         if (!filtreded)
@@ -134,7 +219,7 @@ public class CatalogoActivity extends AppCompatActivity {
                     } while (cursor.moveToNext());
                 }
             } else {
-                Toast.makeText(this, "no hay app q listar", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.msg_no_info), Toast.LENGTH_LONG).show();
             }
 
         } finally {
