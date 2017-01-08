@@ -4,6 +4,8 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,10 +82,22 @@ public class ResumenAppActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.TxtCategory);
         textView.setText(String.valueOf(app.getCategory()));
 
-        ImageView imageView = (ImageView) findViewById(R.id.AppLogo);
-        new DownloadImage(imageView).execute(app.getPictureB());
+        if(isNetworkAvailable()) {
+            ImageView imageView = (ImageView) findViewById(R.id.AppLogo);
+            new DownloadImage(imageView).execute(app.getPictureB());
+        } else {
+            Toast.makeText(this, getString(R.string.msg_no_internet_image), Toast.LENGTH_LONG).show();
+        }
 
+    }
 
+    /**
+     * Method to check if there is internet connection
+     * */
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /**

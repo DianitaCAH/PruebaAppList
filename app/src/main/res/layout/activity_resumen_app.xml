@@ -66,7 +66,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="left"
                             android:padding="2dp"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
                             android:text="@string/lbl_name"/>
@@ -79,7 +79,7 @@
                             android:padding="2dp"
                             android:textColor="@color/dark_gray"
                             android:textStyle="normal"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="asdadaad"
                             android:layout_toRightOf="@+id/lblName"/>
 
@@ -88,7 +88,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:padding="2dp"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
@@ -102,7 +102,7 @@
                             android:layout_gravity="left"
                             android:padding="2dp"
                             android:textColor="@color/dark_gray"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="asdadaad2"
                             android:layout_below="@+id/TxtName"
                             android:layout_toRightOf="@+id/lblMakeBy"    />
@@ -112,7 +112,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:padding="2dp"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
@@ -126,7 +126,7 @@
                             android:layout_gravity="center"
                             android:paddingBottom="2dp"
                             android:textColor="@color/dark_gray"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="asdadaad2"
                             android:layout_below="@+id/TxtMakeBy"
                             android:layout_toRightOf="@+id/lblFecha"    />
@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:padding="2dp"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
                             android:text="@string/lbl_price"
@@ -150,7 +150,7 @@
                             android:layout_gravity="center"
                             android:padding="2dp"
                             android:textColor="@color/dark_gray"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:layout_below="@+id/TxtFecha"
                             android:layout_toRightOf="@+id/lblPrice"/>
 
@@ -160,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
                             android:padding="2dp"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold"
                             android:text="@string/lbl_category"
@@ -173,7 +173,7 @@
                             android:layout_gravity="center"
                             android:padding="2dp"
                             android:textColor="@color/dark_gray"
-                            android:textSize="12sp"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
                             android:layout_below="@+id/TxtPrice"
                             android:layout_toRightOf="@+id/lblCategory"/>
 
@@ -198,7 +198,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp"
-                    android:textSize="12sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/black"
                     android:textStyle="normal"
                     android:text="@string/lbl_summary"
@@ -216,7 +216,7 @@
                         android:id="@+id/txtSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="10sp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/light_gray"
                         android:textStyle="normal"
                         android:text="sahjaksljfhaksjfhaksjfhalkjdfh"/>
