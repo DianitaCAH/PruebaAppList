@@ -47,13 +47,17 @@
         </RelativeLayout>
 
     </LinearLayout>
-    <ListView
-        android:id="@+id/list_apps"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_filtro"
-        android:divider="@null"
-        android:dividerHeight="0dp"   >
-    </ListView>
+        android:layout_below="@+id/layout_filtro">
+        <ListView
+            android:id="@+id/list_apps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"   />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

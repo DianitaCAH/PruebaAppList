@@ -15,6 +15,7 @@
     <string name="msg_no_internet">No hay conexión a internet.</string>
     <string name="msg_no_internet_image">No hay conexión a internet, la imágen no será descargada.</string>
     <string name="msg_no_info">No hay información disponible para mostrar.</string>
+    <string name="msg_no_newinfo">No hay nueva información disponible para mostrar.</string>
     <string name="msg_no_categories">No hay categorías disponibles.</string>
 
 

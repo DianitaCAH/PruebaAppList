@@ -6,6 +6,8 @@ import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,20 +29,23 @@ import com.prueba.diana.pruebaapplist.SqlitedbHelper;
 
 import java.util.ArrayList;
 
-public class CatalogoActivity extends AppCompatActivity {
+public class CatalogoActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     public SqlitedbHelper dbHelper;
     public ListView listvApps;
     public GridView gridvApps;
     public ArrayList<Applications> appsArrayList;
     public ApplicationsAdapter adapter;
     public  boolean isLargeLayout;
+    public String categoria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalogo);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         //Setting screen orientation
         isLargeLayout = getResources().getBoolean(R.bool.portrait_only);
         if (isLargeLayout) { //landscape for tablets
@@ -61,6 +66,21 @@ public class CatalogoActivity extends AppCompatActivity {
         adapter = new ApplicationsAdapter(this, appsArrayList);
         //Loading spinner
         cargoSpinner();
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+
+                new UpdateAppssInfo(adapter).execute();
+            }
+        });
+
     }
 
     @Override
@@ -76,6 +96,45 @@ public class CatalogoActivity extends AppCompatActivity {
             loadAppsPhones();
         }
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        swipeRefreshLayout.setRefreshing(false);
+        Log.e("pase por", "onRestart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        swipeRefreshLayout.setRefreshing(false);
+        Log.e("pase por", "onResume");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        swipeRefreshLayout.setRefreshing(false);
+        new UpdateAppssInfo(adapter).cancel(true);
+        Log.e("pase por", "onStop");
+    }
+
+    /**
+     * This method is called when swipe refresh is pulled down
+     */
+    @Override
+    public void onRefresh() {
+
+        try {
+            new UpdateAppssInfo(adapter).execute();
+            cargoSpinner();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        swipeRefreshLayout.setRefreshing(false);
+        Log.e("pase por", "onRefresh");
     }
 
     /**
@@ -180,7 +239,7 @@ public class CatalogoActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                getAppsArrayList(false, "");
             }
         });
     }
@@ -229,5 +288,43 @@ public class CatalogoActivity extends AppCompatActivity {
         return appsArrayList;
     }
 
+
+    class UpdateAppssInfo extends AsyncTask {
+
+        public SqlitedbHelper dbHelper;
+        public ApplicationsAdapter adapter;
+
+        public UpdateAppssInfo(ApplicationsAdapter adapter) {
+            this.adapter = adapter;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            try {
+                dbHelper = new SqlitedbHelper(getApplicationContext());
+                swipeRefreshLayout.setRefreshing(true);
+                dbHelper.getCatalogo(null);
+                getAppsArrayList(false, "");
+
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            // stopping swipe refresh
+            swipeRefreshLayout.setRefreshing(false);
+
+            Toast.makeText(getApplicationContext(), getString(R.string.msg_no_newinfo), Toast.LENGTH_LONG).show();
+        }
+
+    }
 
 }
